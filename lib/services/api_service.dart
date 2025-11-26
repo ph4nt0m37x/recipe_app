@@ -45,11 +45,4 @@ class ApiService {
     return Details.fromJson(data['meals'][0]);
   }
 
-  Future<List<Category>> searchCategories(String query) async { // regular search
-    final categories = await fetchCategories();
-    return categories
-        .where((c) => c.name.toLowerCase().contains(query.toLowerCase()))
-        .toList();
-  }
-
 }
