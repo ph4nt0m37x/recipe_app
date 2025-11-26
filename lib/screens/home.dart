@@ -44,7 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
             tooltip: 'Random Recipe',
             onPressed: () async {
               final randomRecipe = await _apiService.fetchRandom();
-              Navigator.pushNamed(context, '/details', arguments: randomRecipe);
+              Navigator.pushNamed(context, '/details', arguments: randomRecipe.id);
             },
           ),
         ],
