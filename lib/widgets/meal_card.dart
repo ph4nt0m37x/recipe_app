@@ -30,7 +30,7 @@ class MealCard extends StatelessWidget {
 
                   Row(
                     children: [
-                      Expanded(child: Image.network(meal.img))
+                      Expanded(child: Image.network(meal.img, fit: BoxFit.cover))
                     ],
                   ),
 

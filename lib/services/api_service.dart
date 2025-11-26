@@ -17,11 +17,15 @@ class ApiService {
   }
 
   Future<List<Meal>> fetchMeals(String category) async { // fetching based on the category chosen
+    List<Meal> mealList = [];
     final response = await http.get(Uri.parse('$_baseURL/filter.php?c=$category'));
-    final data = json.decode(response.body);
-    return (data['meals'] as List)
-        .map((c) => Meal.fromJson(c))
-        .toList();
+    if (response.statusCode == 200) {
+      final detailData = json.decode(response.body)['meals'];
+      for (int i = 0; i < detailData.length; i++){
+        mealList.add(Meal.fromJson(detailData[i]));
+      }
+    }
+    return mealList;
   }
 
   Future<List<Meal>> searchMeals(String query) async { // searching meals in the category

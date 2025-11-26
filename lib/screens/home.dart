@@ -38,6 +38,16 @@ class _HomeScreenState extends State<HomeScreen> {
           preferredSize: Size.fromHeight(10),
           child: Container(color: Colors.black87, height: 5),
         ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.shuffle, color: Colors.orange),
+            tooltip: 'Random Recipe',
+            onPressed: () async {
+              final randomRecipe = await _apiService.fetchRandom();
+              Navigator.pushNamed(context, '/details', arguments: randomRecipe);
+            },
+          ),
+        ],
       ),
       body: Column(
         children: [

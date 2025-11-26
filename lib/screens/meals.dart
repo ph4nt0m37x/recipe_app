@@ -3,17 +3,19 @@ import 'package:flutter/material.dart';
 import '../models/meal.dart';
 import '../widgets/meal_card.dart';
 import '../services/api_service.dart';
+import '../widgets/meal_grid.dart';
+
 class MealsScreen extends StatefulWidget {
   final String category;
 
   const MealsScreen({super.key, required this.category});
 
   @override
-  State<MealsScreen> createState() => _HomeScreenState();
+  State<MealsScreen> createState() => _MealsScreenState();
 }
 
-class _HomeScreenState extends State<MealsScreen> {
-  late final List<Meal> _meals;
+class _MealsScreenState extends State<MealsScreen> {
+  List<Meal> _meals = [];
   List<Meal> _filteredMeals = [];
   bool _isLoading = true;
   bool _isSearching = false;
@@ -33,7 +35,8 @@ class _HomeScreenState extends State<MealsScreen> {
       ..sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Recipe Book', style: TextStyle(fontWeight: FontWeight.bold)),
+        title: const Text(
+            'Recipe Book', style: TextStyle(fontWeight: FontWeight.bold)),
         centerTitle: true,
         backgroundColor: Color.fromARGB(255, 255, 255, 255),
         bottom: PreferredSize(
@@ -41,21 +44,69 @@ class _HomeScreenState extends State<MealsScreen> {
           child: Container(color: Colors.black87, height: 5),
         ),
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
-              itemCount: sorted.length,
-              itemBuilder: (context, index) {
-                final meal = sorted[index];
-                return MealCard(meal: meal,);
-              },
-            ),
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : Column(
+          children: [
+      Padding(
+      padding: const EdgeInsets.all(12.0),
+      child: TextField(
+        controller: _searchController,
+        decoration: InputDecoration(
+          hintText: 'Search meals by name...',
+          prefixIcon: const Icon(Icons.search),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
           ),
-        ],
+        ),
+        onChanged: (value) {
+          setState(() {
+            _searchQuery = value;
+          });
+          _searchMeals(value);
+        },
+      ),
+    ),
+            Expanded(
+              child: _filteredMeals.isEmpty && _searchQuery.isNotEmpty
+                  ? Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(Icons.search_off, size: 64, color: Colors.grey),
+                    const SizedBox(height: 16),
+                    const Text(
+                      'No meals found',
+                      style: TextStyle(fontSize: 18, color: Colors.grey),
+                    ),
+                    const SizedBox(height: 8),
+                    TextButton(
+                      onPressed: _isSearching
+                          ? null
+                          : () async {
+                        await _searchMeals(_searchQuery);
+                      },
+                      child: _isSearching
+                          ? const SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                          : const Text('Search in API'),
+                    ),
+                  ],
+                ),
+              )
+                  : Padding(
+                padding: EdgeInsets.symmetric(horizontal: 12),
+                child: MealGrid(meals: _filteredMeals),
+              ),
+            ),
+          ],
       ),
     );
   }
+
 
   void _loadMeals() async {
     final mealList = await _apiService.fetchMeals(widget.category);
@@ -67,14 +118,9 @@ class _HomeScreenState extends State<MealsScreen> {
   }
 
   Future<void> _searchMeals(String query) async {
-
-    if (query.isEmpty) {
-      return;
-    }
-
-    setState(() {
-      _isSearching = true;
-    });
+    // setState(() {
+    //   _isSearching = true;
+    // });
 
     final meals = await _apiService.searchMeals(query);
 
