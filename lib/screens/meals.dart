@@ -4,6 +4,7 @@ import '../models/meal.dart';
 import '../widgets/meal_card.dart';
 import '../services/api_service.dart';
 import '../widgets/meal_grid.dart';
+import 'details.dart';
 
 class MealsScreen extends StatefulWidget {
   final String category;
@@ -15,7 +16,7 @@ class MealsScreen extends StatefulWidget {
 }
 
 class _MealsScreenState extends State<MealsScreen> {
-  List<Meal> _meals = [];
+  late final List<Meal> _meals;
   List<Meal> _filteredMeals = [];
   bool _isLoading = true;
   bool _isSearching = false;
@@ -43,6 +44,16 @@ class _MealsScreenState extends State<MealsScreen> {
           preferredSize: Size.fromHeight(10),
           child: Container(color: Colors.black87, height: 5),
         ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.shuffle, color: Colors.orange),
+            tooltip: 'Random Recipe',
+            onPressed: () async {
+              final randomRecipe = await _apiService.fetchRandom();
+              Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => DetailsScreen(mealId: randomRecipe.id)));
+            },
+          ),
+        ],
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
@@ -99,7 +110,7 @@ class _MealsScreenState extends State<MealsScreen> {
               )
                   : Padding(
                 padding: EdgeInsets.symmetric(horizontal: 12),
-                child: MealGrid(meals: _filteredMeals),
+                child: MealGrid(meals: sorted),
               ),
             ),
           ],
@@ -118,12 +129,10 @@ class _MealsScreenState extends State<MealsScreen> {
   }
 
   Future<void> _searchMeals(String query) async {
-    // setState(() {
-    //   _isSearching = true;
-    // });
-
+    setState(() {
+      _isSearching = true;
+    });
     final meals = await _apiService.searchMeals(query);
-
     setState(() {
       _isSearching = false;
       _filteredMeals = meals;

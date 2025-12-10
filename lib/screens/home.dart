@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../models/category.dart';
 import '../widgets/category_card.dart';
 import '../services/api_service.dart';
+import 'details.dart';
 class HomeScreen extends StatefulWidget {
 
   const HomeScreen({super.key});
@@ -44,13 +45,32 @@ class _HomeScreenState extends State<HomeScreen> {
             tooltip: 'Random Recipe',
             onPressed: () async {
               final randomRecipe = await _apiService.fetchRandom();
-              Navigator.pushNamed(context, '/details', arguments: randomRecipe.id);
+              Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => DetailsScreen(mealId: randomRecipe.id)));
             },
           ),
         ],
+
       ),
       body: Column(
         children: [
+      Padding(
+      padding: const EdgeInsets.all(12.0),
+          child:TextField(
+            controller: _searchController,
+            decoration: InputDecoration(
+              hintText: 'Search categories by name...',
+              prefixIcon: const Icon(Icons.search),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+            onChanged: (value) {
+              setState(() {
+                _searchQuery = value;
+              });
+              _searchCategories(value);
+            },
+          )),
           Expanded(
             child: ListView.builder(
               itemCount: sorted.length,

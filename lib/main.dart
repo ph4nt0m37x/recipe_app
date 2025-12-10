@@ -22,11 +22,6 @@ class MyApp extends StatelessWidget {
       ),
       home: const HomeScreen(),
       initialRoute: "/",
-      routes: {
-        '/meals': (context) => MealsScreen(category: ModalRoute.of(context)!.settings.arguments as String),
-        "/details": (context) => DetailsScreen(
-          mealId: ModalRoute.of(context)!.settings.arguments as String)
-      }
     );
   }
 }

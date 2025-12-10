@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/meal.dart';
+import '../screens/details.dart';
 
 
 class MealCard extends StatelessWidget {
@@ -15,7 +16,7 @@ class MealCard extends StatelessWidget {
 
     return GestureDetector(
         onTap: () {
-          Navigator.pushNamed(context, "/details", arguments: meal.id);
+          Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => DetailsScreen(mealId: meal.id)));
         },
         child: Card(
             shape: RoundedRectangleBorder(
@@ -23,8 +24,9 @@ class MealCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(10),
             ),
             color: color,
+            elevation: 2,
             child: Padding(
-              padding: EdgeInsets.all(5),
+              padding: EdgeInsets.all(3),
               child: Column(
                 children: [
 
@@ -33,18 +35,20 @@ class MealCard extends StatelessWidget {
                       Expanded(child: Image.network(meal.img, fit: BoxFit.cover))
                     ],
                   ),
-
-                  Row (
-                    children: [
-
-                      SizedBox(width: 8),
-                      Text(meal.name, style: TextStyle(fontSize: 22, color: text, fontWeight: FontWeight.bold)),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Divider()
-                    ],
+                  Expanded(
+                    child: Center(
+                      child: Text(
+                        meal.name,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 15,
+                          color: text,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis, // shows ... if text is too long
+                      ),
+                    ),
                   ),
                 ],
               ),)

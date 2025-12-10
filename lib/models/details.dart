@@ -36,7 +36,7 @@ class Details {
     var result = "";
 
     for(int i = 0; i < ingredientsList.length; i++){
-      result =  "-" + result + ingredientsList[i] + measureList[i];
+      result =  result + "• " + ingredientsList[i] + " (" + measureList[i] + ")";
       result += ",\n";
     }
     return result;

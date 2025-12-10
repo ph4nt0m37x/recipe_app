@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:recipe_app/screens/meals.dart';
 import '../models/category.dart';
 
 
@@ -16,7 +17,7 @@ class CategoryCard extends StatelessWidget {
 
     return GestureDetector(
         onTap: () {
-          Navigator.pushNamed(context, "/meals", arguments: category.name);
+          Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => MealsScreen(category: category.name,)));
         },
         child: Card(
             shape: RoundedRectangleBorder(
@@ -24,22 +25,38 @@ class CategoryCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(10),
             ),
             color: color,
+            elevation: 2,
             child: Padding(
               padding: EdgeInsets.all(5),
               child: Column(
                 children: [
-
                   Row(
                     children: [
-                      Expanded(child: Image.network(category.img))
+                      Expanded(
+                        child: Container(
+                            padding: EdgeInsets.all(4),
+                            clipBehavior: Clip.hardEdge,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10), // rounded white background
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(98),
+                            child: Image.network(category.img),
+                          )
+                        ),
+                      ),
                     ],
                   ),
-
+                  Row(
+                    children: [
+                      Divider()
+                    ],
+                  ),
                   Row (
                     children: [
-
                       SizedBox(width: 8),
-                      Text(category.name, style: TextStyle(fontSize: 22, color: text, fontWeight: FontWeight.bold)),
+                      Text(category.name, style: TextStyle(fontSize: 22, color: text, fontWeight: FontWeight.bold,), textAlign: TextAlign.center,),
                     ],
                   ),
                   Divider(),
@@ -49,11 +66,6 @@ class CategoryCard extends StatelessWidget {
                       Expanded(child:
                       Text(category.desc, style: TextStyle(fontSize: 12, color: text)),
                       )
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Divider()
                     ],
                   ),
                   Row(
