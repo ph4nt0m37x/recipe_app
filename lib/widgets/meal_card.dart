@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import '../models/meal.dart';
 import '../screens/details.dart';
+import '../helper/favorites_helper.dart';
 
-
-class MealCard extends StatelessWidget {
+class MealCard extends StatefulWidget {
   final Meal meal;
-
   const MealCard({super.key, required this.meal});
+
+  @override
+  _MealCardState createState() => _MealCardState();
+
+}
+class _MealCardState extends State<MealCard> {
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +21,7 @@ class MealCard extends StatelessWidget {
 
     return GestureDetector(
         onTap: () {
-          Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => DetailsScreen(mealId: meal.id)));
+          Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => DetailsScreen(mealId: widget.meal.id)));
         },
         child: Card(
             shape: RoundedRectangleBorder(
@@ -30,15 +35,37 @@ class MealCard extends StatelessWidget {
               child: Column(
                 children: [
 
-                  Row(
+                  Stack(
                     children: [
-                      Expanded(child: Image.network(meal.img, fit: BoxFit.cover))
+                      Image.network(
+                        widget.meal.img,
+                        fit: BoxFit.cover,
+                      ),
+
+                      Positioned(
+                        top: 8,
+                        right: 8,
+                        child: IconButton(
+                          icon: Icon(
+                            widget.meal.isFavorite
+                                ? Icons.favorite
+                                : Icons.favorite_border,
+                            color: Colors.white,
+                            size: 30,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              toggleFavorite(widget.meal);
+                            });
+                          },
+                        ),
+                      ),
                     ],
                   ),
                   Expanded(
                     child: Center(
                       child: Text(
-                        meal.name,
+                        widget.meal.name,
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 15,

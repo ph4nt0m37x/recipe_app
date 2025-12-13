@@ -4,7 +4,7 @@ import '../models/details.dart';
 
 class DetailsScreen extends StatefulWidget {
   final String mealId;
-
+  static const route = '/details';
   const DetailsScreen({super.key, required this.mealId});
 
   @override

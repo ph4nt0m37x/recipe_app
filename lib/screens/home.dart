@@ -3,6 +3,7 @@ import '../models/category.dart';
 import '../widgets/category_card.dart';
 import '../services/api_service.dart';
 import 'details.dart';
+import 'favorites.dart';
 class HomeScreen extends StatefulWidget {
 
   const HomeScreen({super.key});
@@ -46,6 +47,17 @@ class _HomeScreenState extends State<HomeScreen> {
             onPressed: () async {
               final randomRecipe = await _apiService.fetchRandom();
               Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => DetailsScreen(mealId: randomRecipe.id)));
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.favorite, color: Colors.orange),
+            tooltip: 'Favorites',
+            onPressed: () async {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => FavoritesScreen(),
+                  ));
             },
           ),
         ],

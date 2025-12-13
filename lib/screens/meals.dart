@@ -5,6 +5,7 @@ import '../widgets/meal_card.dart';
 import '../services/api_service.dart';
 import '../widgets/meal_grid.dart';
 import 'details.dart';
+import 'favorites.dart';
 
 class MealsScreen extends StatefulWidget {
   final String category;
@@ -51,6 +52,17 @@ class _MealsScreenState extends State<MealsScreen> {
             onPressed: () async {
               final randomRecipe = await _apiService.fetchRandom();
               Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => DetailsScreen(mealId: randomRecipe.id)));
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.favorite, color: Colors.orange),
+            tooltip: 'Favorites',
+            onPressed: () async {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => FavoritesScreen(),
+                  ));
             },
           ),
         ],
@@ -110,7 +122,7 @@ class _MealsScreenState extends State<MealsScreen> {
               )
                   : Padding(
                 padding: EdgeInsets.symmetric(horizontal: 12),
-                child: MealGrid(meals: sorted),
+                child: MealGrid(meals: sorted,),
               ),
             ),
           ],
