@@ -9,7 +9,7 @@ class Meal {
   Meal.fromJson(Map<String, dynamic> data)
       : name = data['strMeal'],
         img = data['strMealThumb'],
-        id = data['idCategory'];
+        id = data['idMeal'];
 
   Map<String, dynamic> toJson() => {
     'name' : name,
